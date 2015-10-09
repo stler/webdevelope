@@ -19,6 +19,9 @@ class MySqlDB {
 		return $result;
 		
 	}
+
 	public function insert($table, $data) {
+		$stmt = "INSERT INTO `" .$table. "` (`name`, `login`, `password`, `email`) VALUES". $data;
+		$this->$manager->query($stmt);
 	}
 }
