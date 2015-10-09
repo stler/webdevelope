@@ -21,7 +21,19 @@ class MySqlDB {
 	}
 
 	public function insert($table, $data) {
-		$stmt = "INSERT INTO `" .$table. "` (`name`, `login`, `password`, `email`) VALUES". $data;
-		$this->$manager->query($stmt);
+		$stmt = "INSERT INTO `" .$table. "` (`name`, `login`, `password`, `email`) VALUES ". $data;
+		$this->manager->query($stmt);
+	}
+	
+	public function delete($table, $login)
+	{
+		$stmt = "DELETE FROM `users` WHERE login='". $login. "'";
+		$this->manager->query($stmt);
+	}
+	
+	public function update($table, $login, $newname=NULL, $newlogin=NULL, $newpasswd=NULL, $newemail=NULL)
+	{
+		$stmt = "UPDATE `". $table. "` SET `name`='". $newname. "',`login`='". $newlogin. "',`password`='". $newpasswd. "',`email`='". $newemail. "' WHERE login='". $login. "'";
+		$this->manager->query($stmt);
 	}
 }
