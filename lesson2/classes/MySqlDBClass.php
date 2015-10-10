@@ -9,27 +9,49 @@ class MySqlDB {
         $this->manager = new PDO($dsn, $username, $password, $options);
 
          } catch (PDOException $e) {
-             die('Ïîäêëþ÷åíèå íå óäàëîñü: ' . $e->getMessage());
+             die('ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ' . $e->getMessage());
          }
 
 }
-    public function selectAll(){
-        $stmt = "SELECT name FROM user";
+    public function selectAll($table){
+        $stmt = "SELECT * FROM $table";
         return $this->manager->query($stmt);
     }
-    public function insert( $data){
-        $stmt = "INSERT INTO user VALUES " . $data . ";" ;
-        $this->manager->query($stmt);
+
+    
+
+    public function insert($table, $fields, $data) {
+        $stmt = $this->manager->prepare("INSERT INTO $table $fields VALUES $data");
+        $stmt->execute();
     }
 
-    public  function delete($deletevalue){
-        $stmt = "DELETE FROM user WHERE login = '" . $deletevalue . "'";
-        $this->manager->query($stmt);
+    public function update($table, $data) {
+         $stmt = $this->manager->prepare("UPDATE $table  SET UserName=?, Password=?, Email=? WHERE UserName=? ");
+         $stmt->execute(array($data["UserName"],$data["Password"],$data["Email"], $data["oldName"]));
     }
-    public function update($changefield,$newvalue,$login){
-        $stmt = "UPDATE user SET " . $changefield . "= '" . $newvalue ."' WHERE (login='". $login ."');" ;
-        $this->manager->query($stmt);
+    
+
+    public function delete($table, $deleteValue){
+        $stmt = $this->manager->prepare("DELETE FROM $table WHERE `Username` = '$deleteValue'");
+        $stmt->execute();
+        
     }
+     public function addUser($table , $name, $email, $pass) {
+        $fields = "(`UserName`, `Email`, `Password`)";
+        $data = "('" . $name . "', " . "'" . $email . "', " . "'" . $pass . "')";
+        $this->insert($table, $fields, $data);
+     }
+
+    public function showUsers($table) {
+        $stmt = $this->selectAll($table);
+        while($row = $stmt->fetch()){
+        echo "<tr><td>" . $row["UserName"] . "</td><td>" . $row["Email"] . "</td><td>" . $row["Password"] ."</td></tr>";
+     } 
+ }
+
+    
+
     }
+
 
 ?>

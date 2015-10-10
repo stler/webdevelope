@@ -1,65 +1,89 @@
-<?php 
-$dbname = "lesson2"; 
-$host = "localhost"; 
-$userName = "root"; 
-require_once("classes\\MySqlDBClass.php"); 
-$pdo = new MySqlDB($host, $dbname, $userName ); 
-//$pdostmt = $pdo->selectAll();  пусть будет на память пример фетча
-//while($row = $pdostmt->fetch()){ 
-//echo $row['name'] ; 
-//} 
-
-
-if ( isset($_POST["Create"] ) && $_POST["Name"]!= null && $_POST["login"]!= null && $_POST["password"]!= null && $_POST["email"]!= null ){ 
-$data = "(0,'" . $_POST["Name"] . "','" . $_POST["login"] ."','". $_POST["password"] . "','" . $_POST["email"] ."');"; 
-$pdo->insert($data); 
-} 
-if (isset($_GET["login"])&& $_GET!= null) $pdo->delete($_GET["login"]);
-if (isset($_POST["Update"])){
-    if(isset($_POST["oldlogin"])&&$_POST["oldlogin"]!=null){
-    if(isset($_POST["newName"])&& $_POST["newName"]!=null) $pdo->update("name",$_POST["newName"],$_POST["oldlogin"]);
-    if(isset($_POST["newpassword"])&& $_POST["newpassword"]!=null) $pdo->update("password",$_POST["newpassword"],$_POST["oldlogin"]);
-    if(isset($_POST["newemail"])&& $_POST["newemail"]!=null) $pdo->update("email",$_POST["newemail"],$_POST["oldlogin"]);
-    if(isset($_POST["newlogin"])&& $_POST["newlogin"]!=null) $pdo->update("login",$_POST["newlogin"],$_POST["oldlogin"]);
-    
-}
-}
-?> 
-
-
-<title>Create/update  new user</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="bootstrap.css">
 </head>
 <body>
-    <br>  Create new user <br/> 
-    <br/>
-<form name="form" method="post" action="index.php">
-    Name: <br />
-    <input name="Name" type="text" size="25" maxlength="30" value="" /> <br />
-    <br> login <br/>
-    <input name="login" type="text" size="13" maxlength="20" value="" /> <br/>
-    <br> password <br/>
-    <input name="password" type="password" size="80" maxlength="40" value=""/> <br/>
-    <br> email:<br/>
-    <input name="email" type="email" size="25" maxlength="30" value=""/>
-    <br> <br/>
-<input type="submit" name="Create" value="Create new user" />
-</form>
-    <br> Change information  <br/>
-    <br/>
-    <form name="newform" method="post" action="index.php">
-    Name: <br />
-    <input name="newName" type="text" size="25" maxlength="30" value="" /> <br />
-    <br> login <br/>
-    <input name="oldlogin" type="text" size="13" maxlength="20" value="" /> <br/>
-    <br> change login, write if you want change <br />
-    <input name="newlogin" type="text" size="13" maxlength="20" value="" /> <br/>
-    <br> password <br/>
-    <input name="newpassword" type="password" size="80" maxlength="40" value=""/> <br/>
-    <br> email:<br/>
-    <input name="newemail" type="email" size="25" maxlength="30" value=""/>
-    <br> <br/>
-<input type="submit" name="Update" value="change information " />
-</form>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="CreateForm">
+				<h2>Create new user</h2>
+				<form name="Create" action="index.php" method="post" role="form">
+				<div class="form-group">
+				<input  class="form-control" name="name" type="text" size="20" maxlength="20" placeholder="Name">
+				<input  class="form-control" name="password" type="text" size="20" maxlength="20" placeholder="Password">
+				<input   class="form-control" name="email" type="text" size="20" maxlength="20" placeholder="Email">
+				<input 	class="form-control" name="addUser" type="submit" value="Create">
+				</div>
+				</form>
+			</div>
+
+
+		</div>
+		<div class="col-lg-4">
+			<div class="ChangeForm">
+				<h2>Change user's information</h2>
+				<form name="Change" action="index.php" method="post" role="form">
+				<div class="form-group">
+				<input  class="form-control" name="oldName" type="text" size="20" maxlength="20" placeholder="Old name">
+				<input class="form-control" name="UserName" type="text" size="20" maxlength="20" placeholder="New name">
+				<input  class="form-control" name="Password" type="text" size="20" maxlength="20" placeholder="New password">
+				<input   class="form-control" name="Email" type="text" size="20" maxlength="20" placeholder=" New email">
+				<input   class="form-control" name="change" type="submit" value="change">
+				</div>
+				</form>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="DeleteForm">
+				<h2>Delete user</h2>
+				<form name="Delete" action="index.php" method="post" role="form">
+				<div class="form-group">
+				<input  class="form-control" name="username" type="text" size="20" maxlength="20" placeholder="Name">
+				<input   class="form-control" name="Delete" type="submit" value="Delete">
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+</div>
+	
 </body>
 </html>
+
+
+<?php
+$dbname = "lesson2";
+$host = "localhost";
+$userName = "root";
+require_once("classes\\MySqlDBClass.php");
+$pdo = new MySqlDB($host, $dbname, $userName );
+$table = "`Lesson2`.`users`";
+ 
+if(isset($_POST["addUser"] ) && isset($_POST["name"]) && isset($_POST["password"]) && isset($_POST["email"])) {
+	$pdo->addUser($table, $_POST["name"], $_POST["email"], $_POST["password"]);
+
+}
+
+if(isset($_POST["change"])) {
+	$oldName = $_POST["oldName"];
+	$data = array('oldName' => $_POST["oldName"] , 'UserName' => $_POST["UserName"], 'Password' => $_POST["Password"], 'Email' => $_POST["Email"]);
+	$pdo->update($data);
+
+}
+if(isset($_POST["Delete"])) {
+	$pdo->delete($table, $_POST["username"]);
+}
+   
+
+echo "<table class='table table-striped'><caption>РЎРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</caption><tr><th>Name</th><th>Password</th><th>Email</th></tr><tr><td>dwfwfw</td><td>dwgfwg</td><td>wdnwnf</td></tr>";
+ $pdo->showUsers($table);
+echo "</table>"
+?>
+
+
 
