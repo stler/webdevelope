@@ -10,8 +10,12 @@
 		{
 			$url = $_SERVER["REQUEST_URI"];
 			$exploded_url = explode('/', $url);
-			$this->controller = $exploded_url[2];
-			$this->action = $exploded_url[3];
+			if(isset($exploded_url[2]))
+				$this->controller = $exploded_url[2];
+
+			if(isset($exploded_url[3]))
+				$this->action = $exploded_url[3];
+
 			for($i = 4; $i < sizeof($exploded_url); $i++)
 				if($exploded_url[$i] )
 				$this->params["GET"][] = $exploded_url[$i];
