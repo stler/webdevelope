@@ -9,8 +9,9 @@
 		
 		function hahdlerRequest()
 		{
-// 			$request = new \Request();
-// 			Routing::run($request);
+ 			$request = new Request();
+			$config = new Config();
+ //			Routing::run($request);
 		}
 		
 	}
