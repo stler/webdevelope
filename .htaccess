@@ -14,7 +14,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # Rewrite all other URLs to index.php/URL
-RewriteRule .* php_lesson3/index.php?q=$0
+RewriteRule .* php_framework/index.php?q=$0
 
 # Default charset
 AddDefaultCharset utf-8
